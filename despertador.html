@@ -4,49 +4,67 @@
     <title>Despertador JavaScript</title>
 </head>
 <body>
+    <!-- Título da página -->
     <h1>Despertador JavaScript</h1>
     
+    <!-- Entrada para definir o tempo do despertador -->
     <label for="time">Defina o tempo para o despertador (em segundos):</label>
     <input type="number" id="time" min="1" step="1">
     <button id="setAlarm">Definir Despertador</button>
     
+    <!-- Mostra o tempo atual -->
     <p>Tempo atual: <span id="currentTime">0</span> segundos</p>
+    <!-- Mostra o tempo restante até o alarme -->
     <p>Tempo restante até o alarme: <span id="remainingTime">-</span> segundos</p>
 
+    <!-- Elemento de áudio para o som do alarme -->
     <audio id="alarmSound" src="alarm.mp3"></audio>
+    <!-- Botão para parar o alarme (inicialmente oculto) -->
     <button id="stopAlarm" style="display: none;">Parar Alarme</button>
 
     <script>
+        // Variável para armazenar o intervalo do alarme
         let alarmInterval;
 
+        // Define o evento de clique no botão "Definir Despertador"
         document.getElementById("setAlarm").addEventListener("click", function() {
+            // Obtém o valor da entrada de tempo
             var timeInput = document.getElementById("time");
             var timeInSeconds = parseInt(timeInput.value, 10);
             
+            // Verifica se o tempo é válido
             if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
+                // Elementos de exibição do tempo
                 var currentTimeSpan = document.getElementById("currentTime");
                 var remainingTimeSpan = document.getElementById("remainingTime");
                 var startTime = Date.now();
                 
+                // Atualiza o tempo a cada segundo
                 alarmInterval = setInterval(function() {
                     var currentTime = Math.floor((Date.now() - startTime) / 1000);
                     var remainingTime = timeInSeconds - currentTime;
                     
+                    // Atualiza os elementos de exibição
                     currentTimeSpan.textContent = currentTime;
                     remainingTimeSpan.textContent = remainingTime;
                     
+                    // Verifica se o alarme deve ser disparado
                     if (remainingTime <= 0) {
+                        // Limpa o intervalo e inicia o som do alarme
                         clearInterval(alarmInterval);
                         document.getElementById("alarmSound").play();
                         document.getElementById("stopAlarm").style.display = "inline";
                     }
                 }, 1000); // Atualiza a cada segundo
             } else {
+                // Alerta em caso de tempo inválido
                 alert("Por favor, insira um tempo válido em segundos.");
             }
         });
 
+        // Define o evento de clique no botão "Parar Alarme"
         document.getElementById("stopAlarm").addEventListener("click", function() {
+            // Pausa o som do alarme e oculta o botão "Parar Alarme"
             document.getElementById("alarmSound").pause();
             document.getElementById("stopAlarm").style.display = "none";
         });
