@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Despertador JavaScript</title>
+</head>
+<body>
+    <h1>Despertador JavaScript</h1>
+    
+    <label for="time">Defina o tempo para o despertador (em segundos):</label>
+    <input type="number" id="time" min="1" step="1">
+    <button id="setAlarm">Definir Despertador</button>
+    
+    <p>Tempo atual: <span id="currentTime">0</span> segundos</p>
+    <p>Tempo restante até o alarme: <span id="remainingTime">-</span> segundos</p>
+
+    <audio id="alarmSound" src="alarm.mp3"></audio>
+    <button id="stopAlarm" style="display: none;">Parar Alarme</button>
+
+    <script>
+        let alarmInterval;
+
+        document.getElementById("setAlarm").addEventListener("click", function() {
+            var timeInput = document.getElementById("time");
+            var timeInSeconds = parseInt(timeInput.value, 10);
+            
+            if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
+                var currentTimeSpan = document.getElementById("currentTime");
+                var remainingTimeSpan = document.getElementById("remainingTime");
+                var startTime = Date.now();
+                
+                alarmInterval = setInterval(function() {
+                    var currentTime = Math.floor((Date.now() - startTime) / 1000);
+                    var remainingTime = timeInSeconds - currentTime;
+                    
+                    currentTimeSpan.textContent = currentTime;
+                    remainingTimeSpan.textContent = remainingTime;
+                    
+                    if (remainingTime <= 0) {
+                        clearInterval(alarmInterval);
+                        document.getElementById("alarmSound").play();
+                        document.getElementById("stopAlarm").style.display = "inline";
+                    }
+                }, 1000); // Atualiza a cada segundo
+            } else {
+                alert("Por favor, insira um tempo válido em segundos.");
+            }
+        });
+
+        document.getElementById("stopAlarm").addEventListener("click", function() {
+            document.getElementById("alarmSound").pause();
+            document.getElementById("stopAlarm").style.display = "none";
+        });
+    </script>
+</body>
+</html>
